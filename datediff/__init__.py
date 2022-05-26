@@ -1,3 +1,3 @@
-from .datediff import difference, is_leap_year
+from .datediff import Date, difference, is_leap_year, parse_date
 
-__all__ = ['difference', 'is_leap_year']
+__all__ = ['Date', 'difference', 'is_leap_year', 'parse_date']

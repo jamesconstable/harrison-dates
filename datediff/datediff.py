@@ -7,7 +7,7 @@ from enum import IntEnum
 import re
 from typing import NoReturn, Optional
 
-DATE_RE = re.compile(r'(?P<year>\d\d\d\d)-(?P<month>[01]\d)-(?P<day>[012]\d)',
+DATE_RE = re.compile(r'(?P<year>\d\d\d\d)-(?P<month>\d\d)-(?P<day>\d\d)',
                      re.ASCII)
 
 class Month(IntEnum):
@@ -57,7 +57,7 @@ def parse_date(string: str) -> Date:
     day = int(match.group('day'))
 
     if month < Month.JANUARY or month > Month.DECEMBER:
-        raise ValueError('Invalid date: month must be in the range '
+        raise ValueError('Invalid date: month must be in range '
             + f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
 
     match month:
@@ -69,10 +69,10 @@ def parse_date(string: str) -> Date:
                 raise_day_range_error(day, month, 28, year)
         case Month.APRIL | Month.JUNE | Month.NOVEMBER | Month.SEPTEMBER:
             if not 1 <= day <= 30:
-                raise_day_range_error(month, day, 30)
+                raise_day_range_error(day, month, 30)
         case _:
             if not 1 <= day <= 31:
-                raise_day_range_error(month, day, 31)
+                raise_day_range_error(day, month, 31)
 
     return Date(year, month, day)
 
@@ -84,4 +84,4 @@ def raise_day_range_error(
     raise ValueError(
         f'Invalid date: {Month(month).name} ({month}) has {max_day} days'
         + ('' if year is None else f' in {year}')
-        + '; day must be in range [1-{max_day}]')
+        + f'; day must be in range [1-{max_day}]')
