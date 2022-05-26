@@ -74,7 +74,7 @@ class TestParseDate(unittest.TestCase):
         Test date where month is zero (a potential 0-based error).
         '''
         self.assertRaisesRegex(ValueError,
-                r'.*month must be in range \[1-12\].*',
+                r'month.*must be in range \[1-12\].*',
                 datediff.parse_date, '2020-00-01')
 
     def test_month_out_of_range(self):
@@ -82,7 +82,7 @@ class TestParseDate(unittest.TestCase):
         Test date with month greater than 12.
         '''
         self.assertRaisesRegex(ValueError,
-                r'.*month must be in range \[1-12\].*',
+                r'month.*must be in range \[1-12\].*',
                 datediff.parse_date, '2020-13-01')
 
     def test_dd_mm_yyyy_ordering(self):
