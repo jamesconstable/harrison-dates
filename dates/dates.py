@@ -109,30 +109,31 @@ def parse_date(string: str) -> Date:
     '''
     match = DATE_RE.fullmatch(string)
     if match is None:
-        raise ValueError('Date string must be in the format "YYYY-MM-DD"')
+        raise ValueError(
+                f'Invalid date "{string}": must be in the format "YYYY-MM-DD"')
 
     year = int(match.group('year'))
     month = int(match.group('month'))
     day = int(match.group('day'))
 
     if not Month.JANUARY <= month <= Month.DECEMBER:
-        raise ValueError('Invalid month: must be in range ' +
+        raise ValueError(f'Invalid date "{string}": month must be in range ' +
             f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
 
     month = Month(month)
     if not 1 <= day <= month.days_in_year(year):
-        raise_day_range_error(month, year)
+        raise_day_range_error(string, month, year)
 
     return Date(year, month, day)
 
 
-def raise_day_range_error(month: Month, year: int) -> NoReturn:
+def raise_day_range_error(string: str, month: Month, year: int) -> NoReturn:
     '''
     Helper function for raising descriptive errors when a day is outside the
     normal bounds for a month.
     '''
     max_day = month.days_in_year(year)
     raise ValueError(
-        f'Invalid date: {Month(month).name} ({month}) has {max_day} days'
+        f'Invalid date "{string}": {Month(month).name} has {max_day} days'
         + (f' in {year}' if month is Month.FEBRUARY else '')
         + f'; day must be in range [1-{max_day}]')
