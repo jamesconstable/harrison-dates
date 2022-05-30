@@ -1,4 +1,8 @@
-# pylint: disable=missing-module-docstring
+'''
+This private submodule contains all of the date-related functionality,
+including representation, parsing, and the `days_between` calculation described
+in the problem spec.
+'''
 
 from dataclasses import dataclass
 from enum import IntEnum
@@ -15,22 +19,23 @@ DATE_RE = re.compile(r'(?P<year>\d\d\d\d)-(?P<month>\d\d)-(?P<day>\d\d)',
 # one cycle is 100 - 4 + 1 = 97, and the rest are non-leaps, 400 - 97 = 303.
 DAYS_IN_LEAP_CYCLE = 97 * 366 + 303 * 365
 
+
 class Month(IntEnum):
     '''
     Represents the months of the year. Integer values are 1-based.
     '''
-    JANUARY   = 1
-    FEBRUARY  = 2
-    MARCH     = 3
-    APRIL     = 4
-    MAY       = 5
-    JUNE      = 6
-    JULY      = 7
-    AUGUST    = 8
+    JANUARY = 1
+    FEBRUARY = 2
+    MARCH = 3
+    APRIL = 4
+    MAY = 5
+    JUNE = 6
+    JULY = 7
+    AUGUST = 8
     SEPTEMBER = 9
-    OCTOBER   = 10
-    NOVEMBER  = 11
-    DECEMBER  = 12
+    OCTOBER = 10
+    NOVEMBER = 11
+    DECEMBER = 12
 
     def days_in_year(self, year: int) -> int:
         '''
@@ -70,7 +75,7 @@ class Date:
         return total + self.day - 1
 
 
-def days_between(date1: Date|str, date2: Date|str) -> int:
+def days_between(date1: Date | str, date2: Date | str) -> int:
     '''
     Returns the number of days between date1 and date2, not including the start
     and end dates. Result is always a positive integer (the absolute number of
@@ -118,7 +123,7 @@ def parse_date(string: str) -> Date:
 
     if not Month.JANUARY <= month <= Month.DECEMBER:
         raise ValueError(f'Invalid date "{string}": month must be in range ' +
-            f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
+                         f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
 
     month = Month(month)
     if not 1 <= day <= month.days_in_year(year):

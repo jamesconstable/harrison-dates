@@ -1,6 +1,11 @@
+'''
+This submodule contains the unit tests for the `dates.days_between` function.
+'''
+
 import unittest
 
 from dates import days_between
+
 
 class TestDaysBetween(unittest.TestCase):
     '''

@@ -1,6 +1,11 @@
+'''
+This submodule contains the unit tests for the `dates.parse_date` function.
+'''
+
 import unittest
 
 from dates import Date, parse_date
+
 
 class TestParseDate(unittest.TestCase):
     '''
@@ -22,8 +27,9 @@ class TestParseDate(unittest.TestCase):
             month_str = str(month).zfill(2)
             self.assertEqual(parse_date(f'2020-{month_str}-01'),
                              Date(2020, month, 1))
-            self.assertRaisesRegex(ValueError, r'.*day must be in range \[1-.*',
-                    parse_date, f'2020-{month_str}-00')
+            self.assertRaisesRegex(ValueError,
+                                   r'.*day must be in range \[1-.*',
+                                   parse_date, f'2020-{month_str}-00')
 
     def test_30_day_month_end_boundaries(self):
         '''
@@ -34,8 +40,8 @@ class TestParseDate(unittest.TestCase):
             self.assertEqual(parse_date(f'2022-{month_str}-30'),
                              Date(2022, month, 30))
             self.assertRaisesRegex(ValueError,
-                    r'.*day must be in range \[1-30\].*',
-                    parse_date, f'2022-{month_str}-31')
+                                   r'.*day must be in range \[1-30\].*',
+                                   parse_date, f'2022-{month_str}-31')
 
     def test_31_day_month_end_boundaries(self):
         '''
@@ -46,8 +52,8 @@ class TestParseDate(unittest.TestCase):
             self.assertEqual(parse_date(f'2022-{month_str}-31'),
                              Date(2022, month, 31))
             self.assertRaisesRegex(ValueError,
-                    r'.*day must be in range \[1-31\].*',
-                    parse_date, f'2022-{month_str}-32')
+                                   r'.*day must be in range \[1-31\].*',
+                                   parse_date, f'2022-{month_str}-32')
 
     def test_non_leap_february_boundary(self):
         '''
@@ -56,8 +62,8 @@ class TestParseDate(unittest.TestCase):
         self.assertEqual(parse_date('2021-02-28'),
                          Date(2021, 2, 28))
         self.assertRaisesRegex(ValueError,
-                r'.*day must be in range \[1-28\].*',
-                parse_date, '2021-02-29')
+                               r'.*day must be in range \[1-28\].*',
+                               parse_date, '2021-02-29')
 
     def test_leap_february_boundary(self):
         '''
@@ -66,24 +72,24 @@ class TestParseDate(unittest.TestCase):
         self.assertEqual(parse_date('2020-02-29'),
                          Date(2020, 2, 29))
         self.assertRaisesRegex(ValueError,
-                r'.*day must be in range \[1-29\].*',
-                parse_date, '2020-02-30')
+                               r'.*day must be in range \[1-29\].*',
+                               parse_date, '2020-02-30')
 
     def test_month_is_zero(self):
         '''
         Test date where month is zero (a potential 0-based error).
         '''
         self.assertRaisesRegex(ValueError,
-                r'month.*must be in range \[1-12\].*',
-                parse_date, '2020-00-01')
+                               r'month.*must be in range \[1-12\].*',
+                               parse_date, '2020-00-01')
 
     def test_month_out_of_range(self):
         '''
         Test date with month greater than 12.
         '''
         self.assertRaisesRegex(ValueError,
-                r'month.*must be in range \[1-12\].*',
-                parse_date, '2020-13-01')
+                               r'month.*must be in range \[1-12\].*',
+                               parse_date, '2020-13-01')
 
     def test_dd_mm_yyyy_ordering(self):
         '''

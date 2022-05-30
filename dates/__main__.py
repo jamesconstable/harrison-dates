@@ -1,4 +1,7 @@
-# pylint: disable=missing-module-docstring
+'''
+Command line runner for the `days_between` functionality. Accepts two dates in
+the format YYYY-MM-DD and outputs the number of days between them to stdout.
+'''
 
 import sys
 
@@ -16,6 +19,5 @@ match sys.argv[1:]:
     case ['-h'] | ['--help']:
         print(USAGE_MSG)
     case _:
-        print(sys.argv)
         print(USAGE_MSG, file=sys.stderr)
         sys.exit(1)
