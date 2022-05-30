@@ -1,6 +1,6 @@
 import unittest
 
-import datediff
+from dates import is_leap_year
 
 class TestIsLeapYear(unittest.TestCase):
     '''
@@ -11,24 +11,24 @@ class TestIsLeapYear(unittest.TestCase):
         '''
         Test case for an obvious non-leap year (not divisible by 4).
         '''
-        self.assertFalse(datediff.is_leap_year(2001))
+        self.assertFalse(is_leap_year(2001))
 
     def test_regular_leap_year(self):
         '''
         Test case for an obvious leap year (divisible by 4, not a century).
         '''
-        self.assertTrue(datediff.is_leap_year(2004))
+        self.assertTrue(is_leap_year(2004))
 
     def test_non_leap_century(self):
         '''
         Test case for a century year that is not a leap year under the
         Gregorian calendar.
         '''
-        self.assertFalse(datediff.is_leap_year(1900))
+        self.assertFalse(is_leap_year(1900))
 
     def test_leap_century(self):
         '''
         Test case for a century year that is a leap year under the Gregorian
         calendar.
         '''
-        self.assertTrue(datediff.is_leap_year(2000))
+        self.assertTrue(is_leap_year(2000))

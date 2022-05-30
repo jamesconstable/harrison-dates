@@ -32,6 +32,19 @@ class Month(IntEnum):
     NOVEMBER  = 11
     DECEMBER  = 12
 
+    def days_in_year(self, year: int) -> int:
+        '''
+        Returns the number of days in this month in the given year.
+        '''
+        match self:
+            case Month.FEBRUARY if is_leap_year(year):
+                return 29
+            case Month.FEBRUARY:
+                return 28
+            case Month.APRIL | Month.JUNE | Month.NOVEMBER | Month.SEPTEMBER:
+                return 30
+        return 31
+
 
 @dataclass(frozen=True)
 class Date:
@@ -41,6 +54,20 @@ class Date:
     year: int
     month: Month
     day: int
+
+    def days_since_epoch(self) -> int:
+        '''
+        Returns the number of days that have elapsed since 1BC-01-01 in the
+        proleptic Gregorian calendar (`Date(0, 1, 1)`), not including `date`.
+        '''
+        # Rather than counting up from 1BC each time, start at the beginning of
+        # the 400-year leap cycle that contains `date`.
+        total = (self.year // 400) * DAYS_IN_LEAP_CYCLE
+        for year in range(self.year % 400):
+            total += 366 if is_leap_year(year) else 365
+        for month in range(Month.JANUARY, self.month):
+            total += Month(month).days_in_year(self.year)
+        return total + self.day - 1
 
 
 def days_between(date1: Date|str, date2: Date|str) -> int:
@@ -55,43 +82,8 @@ def days_between(date1: Date|str, date2: Date|str) -> int:
         date1 = parse_date(date1)
     if isinstance(date2, str):
         date2 = parse_date(date2)
-    difference = abs(days_since_epoch(date1) - days_since_epoch(date2))
+    difference = abs(date1.days_since_epoch() - date2.days_since_epoch())
     return max(0, difference - 1)
-
-
-def days_since_epoch(date: Date) -> int:
-    '''
-    Returns the number of days that have elapsed since 1BC-01-01 in the
-    proleptic Gregorian calendar (`Date(0, 1, 1)`), not including `date`.
-    '''
-    # Rather than counting up from 1BC each time, start at the beginning of the
-    # 400-year leap cycle that contains `date`.
-    total = (date.year // 400) * DAYS_IN_LEAP_CYCLE
-    for year in range(date.year % 400):
-        total += 366 if is_leap_year(year) else 365
-    for month in range(Month.JANUARY, date.month):
-        total += days_in_month(month, date.year)
-    return total + date.day - 1
-
-
-def days_in_month(month: int, year: int) -> int:
-    '''
-    Returns the number of days in `month` in the given `year`. Raises a
-    `ValueError` if `month` is not a valid month.
-    '''
-    if Month.JANUARY <= month <= Month.DECEMBER:
-        match month:
-            case Month.FEBRUARY if is_leap_year(year):
-                return 29
-            case Month.FEBRUARY:
-                return 28
-            case Month.APRIL | Month.JUNE | Month.NOVEMBER | Month.SEPTEMBER:
-                return 30
-            case _:
-                return 31
-
-    raise ValueError('Invalid month: must be in range '
-        + f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
 
 
 def is_leap_year(year: int) -> bool:
@@ -123,20 +115,23 @@ def parse_date(string: str) -> Date:
     month = int(match.group('month'))
     day = int(match.group('day'))
 
-    last_day_of_month = days_in_month(month, year)  # Raises exception if month
-                                                    # is not valid.
-    if not 1 <= day <= last_day_of_month:
+    if not Month.JANUARY <= month <= Month.DECEMBER:
+        raise ValueError('Invalid month: must be in range ' +
+            f'[{Month.JANUARY.value}-{Month.DECEMBER.value}]')
+
+    month = Month(month)
+    if not 1 <= day <= month.days_in_year(year):
         raise_day_range_error(month, year)
 
-    return Date(year, Month(month), day)
+    return Date(year, month, day)
 
 
-def raise_day_range_error(month: int, year: int) -> NoReturn:
+def raise_day_range_error(month: Month, year: int) -> NoReturn:
     '''
     Helper function for raising descriptive errors when a day is outside the
     normal bounds for a month.
     '''
-    max_day = days_in_month(month, year)
+    max_day = month.days_in_year(year)
     raise ValueError(
         f'Invalid date: {Month(month).name} ({month}) has {max_day} days'
         + (f' in {year}' if month is Month.FEBRUARY else '')

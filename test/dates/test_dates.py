@@ -1,10 +1,10 @@
 import unittest
 
-from datediff import days_between
+from dates import days_between
 
 class TestDaysBetween(unittest.TestCase):
     '''
-    Unit tests for datediff function.
+    Unit tests for days_between function.
     '''
 
     def test_same_day(self):
