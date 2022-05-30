@@ -1,0 +1,12 @@
+astroid==2.11.5
+dill==0.3.5.1
+flake8==4.0.1
+isort==5.10.1
+lazy-object-proxy==1.7.1
+mccabe==0.6.1
+platformdirs==2.5.2
+pycodestyle==2.8.0
+pyflakes==2.4.0
+pylint==2.13.9
+tomli==2.0.1
+wrapt==1.14.1
