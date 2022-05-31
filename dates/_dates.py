@@ -88,6 +88,10 @@ def days_between(date1: Date | str, date2: Date | str) -> int:
     if isinstance(date2, str):
         date2 = parse_date(date2)
     difference = abs(date1.days_since_epoch() - date2.days_since_epoch())
+
+    # Subtract one day to correct for the fact that days_since_epoch uses
+    # half-open ranges, but the spec requires both start and end dates to be
+    # excluded.
     return max(0, difference - 1)
 
 

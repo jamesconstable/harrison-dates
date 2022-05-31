@@ -1,6 +1,9 @@
 '''
 Command line runner for the `days_between` functionality. Accepts two dates in
-the format YYYY-MM-DD and outputs the number of days between them to stdout.
+the format "YYYY-MM-DD" and outputs the number of days between them to stdout.
+All calculations assume the proleptic Gregorian calendar (i.e. extrapolating
+the modern rules for leap years indefinitely both forwards and backwards), and
+the year 1 BC may be expressed as 0000.
 '''
 
 import sys
